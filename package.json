@@ -1,0 +1,35 @@
+{
+  "name": "officina-tutor",
+  "version": "0.1.0",
+  "description": "A deterministic execution tracer and AI coding tutor for Officina (asifuddin.com/officina).",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "npm run sync:pyodide && vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "sync:pyodide": "node scripts/sync-pyodide.mjs",
+    "test": "npm run test:py && npm run test:js",
+    "test:py": "python3 -m unittest discover -s tests/python",
+    "test:js": "node --test \"tests/js/*.test.ts\"",
+    "check": "tsc --noEmit",
+    "verify": "npm run check && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6",
+    "pyodide": "314.0.6",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/bodoni-moda": "^5.3.0",
+    "@fontsource-variable/eb-garamond": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0"
+  }
+}

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" data-theme="vellum">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Officina AI — Md. Asif Uddin</title>
+    <meta name="description" content="Write Python, trace it, and step through what it actually did — every line, variable and condition, recorded by the interpreter in your browser." />
+    <script>
+      // The site's theme, read before paint so the page never flashes the
+      // wrong one. Same key as asifuddin.com, so a choice made there holds here.
+      (function () {
+        var root = document.documentElement;
+        try {
+          var stored = localStorage.getItem('codex-theme');
+          root.dataset.theme = stored === 'nocturne' || stored === 'vellum'
+            ? stored
+            : (matchMedia('(prefers-color-scheme: dark)').matches ? 'nocturne' : 'vellum');
+        } catch (e) { root.dataset.theme = 'vellum'; }
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">asifuddin.com</a><span aria-hidden="true">/</span>
+        <a href="/officina">Officina</a><span aria-hidden="true">/</span>
+        <span aria-current="page">AI</span>
+      </nav>
+      <button class="theme" type="button" id="theme" aria-label="Switch theme">Nocturne</button>
+    </header>
+
+    <main class="page">
+      <header class="intro">
+        <p class="kicker">Officina · AI</p>
+        <h1>Write. Run. Understand.</h1>
+        <p class="lede">
+          Write a Python program and press <strong>Trace</strong>. It runs here, in your browser, and every step it
+          takes is recorded as it happens — the line, the variables it changed, what each condition evaluated to and
+          why. Then step through it, forwards and back, at your own pace.
+        </p>
+        <p class="sub">
+          Nothing is uploaded. The trace comes from the interpreter, not from a model: what you see is what ran.
+          <a class="back" href="/officina">Back to the notebook</a>
+        </p>
+      </header>
+
+      <hr class="rule" />
+
+      <div class="bench">
+        <div class="bench-bar">
+          <div class="tabs" role="tablist" aria-label="View">
+            <button class="tab" role="tab" id="tab-code" aria-selected="true" aria-controls="panel-code">Code</button>
+            <button class="tab" role="tab" id="tab-trace" aria-selected="false" aria-controls="panel-trace">Trace</button>
+          </div>
+          <span class="lang">Python</span>
+          <span class="gap"></span>
+          <label class="examples">
+            <span class="visually-hidden">Examples</span>
+            <select id="examples"><option value="">Examples…</option></select>
+          </label>
+          <button class="btn btn-go" type="button" id="trace">▶ Trace</button>
+        </div>
+        <p class="status" id="status" role="status"></p>
+
+        <section class="panel" id="panel-code" role="tabpanel" aria-labelledby="tab-code">
+          <div class="editor">
+            <div class="gutter" id="gutter" aria-hidden="true"></div>
+            <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Python program"></textarea>
+          </div>
+          <details class="stdin" id="stdin-wrap">
+            <summary>Input <span class="note">— what <code>input()</code> reads, one line per call</span></summary>
+            <textarea id="stdin" spellcheck="false" rows="3" aria-label="Program input"></textarea>
+          </details>
+          <p class="hint">Ctrl/⌘ + Enter traces. In the trace: ← → step, Space plays, and clicking a line jumps to the next time it runs.</p>
+        </section>
+
+        <section class="panel" id="panel-trace" role="tabpanel" aria-labelledby="tab-trace" hidden>
+          <p class="stale" id="stale" hidden>
+            The code has changed since this trace. <button class="linkish" type="button" id="retrace">Trace it again</button>
+          </p>
+          <div id="view"></div>
+          <p class="empty" id="no-trace">Nothing traced yet. Write a program on the Code tab and press Trace.</p>
+        </section>
+      </div>
+
+      <hr class="rule" />
+
+      <section class="about">
+        <h2>How this works</h2>
+        <p>
+          Your program runs on CPython compiled to WebAssembly, in a background worker, so a program that never stops
+          cannot freeze the page. A tracer watches it line by line and writes down only what it observes. Conditions
+          are recorded as they are computed, so the values shown are the values the program used — nothing is run a
+          second time to display it.
+        </p>
+        <p>
+          Long programs are stopped at 50,000 steps or 5 seconds, and the trace says it is incomplete rather than
+          pretending otherwise. Explanations from a language model will sit alongside the trace; they will never
+          replace it.
+        </p>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

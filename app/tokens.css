@@ -1,0 +1,79 @@
+/*
+ * Copied from the portfolio (src/styles/tokens.css) so this page is dressed
+ * exactly like asifuddin.com. Keep the two in step: if a colour changes
+ * there, it changes here.
+ */
+
+:root {
+  /* ---- Vellum (default, light) ---- */
+  --paper:        #E7E1CE;
+  --paper-raised: #F2EDDE;
+  --ink:          #191713;
+  --ink-soft:     #4A443A;
+  --fundus:       #984A16;
+  --oxblood:      #6B2230;
+  --oxblood-text: #6B2230;
+  --brass:        #94762F;
+  --brass-text:   #6E571F;
+  --verdigris:    #3A5549;
+
+  /* ---- Lesion set — data colours, identical in both modes ---- */
+  --lesion-ma:  #8C2F26;
+  --lesion-he:  #4E1E2C;
+  --lesion-ex:  #C9A227;
+  --lesion-cws: #93A98F;
+  --lesion-ves: #2F566D;
+
+  /* ---- Families ---- */
+  --font-display: 'Bodoni Moda Variable', 'Bodoni Moda', var(--fallback-display), serif;
+  --font-body:    'EB Garamond Variable', 'EB Garamond', var(--fallback-body), serif;
+  --font-mono:    'IBM Plex Mono', var(--fallback-mono), monospace;
+
+  /* Metric-matched fallbacks, declared in fonts.css, kill layout shift */
+  --fallback-display: 'Bodoni Fallback';
+  --fallback-body:    'Garamond Fallback';
+  --fallback-mono:    'Plex Fallback';
+
+  /* ---- Type scale (rem, root 16px) ---- */
+  --t-xs:   0.8125rem;
+  /* The header row only — nav links and the theme toggle, never the wordmark.
+     A shade under --t-xs so the nav sits back from the name without the rest
+     of the site's mono lettering moving, and small enough that seven entries
+     plus the toggle hold one row down to 1024px. */
+  --t-nav:  0.6875rem;
+  --t-sm:   0.875rem;
+  --t-base: 1rem;
+  --t-md:   1.1875rem;
+  --t-lg:   1.5rem;
+  --t-xl:   2rem;
+  --t-2xl:  2.75rem;
+  --t-3xl:  4rem;
+
+  /* ---- Rhythm ---- */
+  --measure: 68ch;
+  --body-size: 19px;
+  --body-leading: 1.75;
+  --rule: 0.5px;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --chapter-gap: clamp(5rem, 12vh, 9rem);
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-ink: cubic-bezier(0.65, 0, 0.35, 1);
+
+  color-scheme: light;
+}
+:root[data-theme='nocturne'] {
+  --paper:        #131110;
+  --paper-raised: #1D1A16;
+  --ink:          #E4DCC7;
+  --ink-soft:     #9A917E;
+  --fundus:       #D98A45;
+  --oxblood:      #A84455;
+  --oxblood-text: #C96877;
+  --brass:        #C0A059;
+  --brass-text:   #C0A059;
+  --verdigris:    #7BA292;
+
+  color-scheme: dark;
+}
