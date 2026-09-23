@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "npm run sync:pyodide && vite",
     "build": "vite build",
+    "build:portfolio": "VITE_PYODIDE_URL=/pyodide/ OFFICINA_PORTFOLIO=1 vite build --outDir ../dist-portfolio",
     "preview": "vite preview",
     "sync:pyodide": "node scripts/sync-pyodide.mjs",
     "test": "npm run test:py && npm run test:js",

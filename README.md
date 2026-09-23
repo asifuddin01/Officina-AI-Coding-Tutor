@@ -23,8 +23,9 @@ Phase 1 (Python, build guide §42) — the deterministic half:
       positions that changed, call stack, output up to the step, timeline,
       play/pause/scrub/keyboard
 - [x] Its own page, `/officina/ai/`, in Officina's paper and ink
-- [ ] Entry point on the Officina page (portfolio branch
-      `claude/officina-ai-setup-1c4d0c`)
+- [x] Entry point on the Officina page — a button in the page header, not
+      in the notebook toolbar (portfolio branch `claude/officina-ai-setup-1c4d0c`)
+- [ ] Getting the build into the portfolio's CI (see docs/inspection.md)
 - [ ] AI provider abstraction; explanation, solver, "ask about this step"
 - [ ] C/C++, Java, assembly simulator (phases 2–4)
 
@@ -39,8 +40,13 @@ npm install
 npm run dev          # http://localhost:5178/officina/ai/
 npm test             # Python tracer on CPython 3.14, then the JS suite on Node + Pyodide
 npm run check        # TypeScript
-npm run build        # dist/, to be served at /officina/ai/
+npm run build        # dist/, standalone, with its own copy of Pyodide
+npm run build:portfolio   # dist-portfolio/, for asifuddin.com: uses the site's /pyodide/
 ```
+
+On the portfolio, `scripts/sync-officina-ai.mjs` copies `dist-portfolio/` into
+`public/officina/ai/` (point `OFFICINA_AI_DIST` at it), and the Officina page
+shows its button only when that copy exists.
 
 Needs Node ≥ 22.18 and Python 3.14 (the same version Pyodide 314 embeds —
 the tests compare the two traces step for step).

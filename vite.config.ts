@@ -6,11 +6,17 @@ import { defineConfig } from 'vite';
  * `base` is where the built page will be served from. It defaults to
  * /officina/ai/ — the address the Officina page links to — and can be
  * overridden with OFFICINA_BASE for a preview deployment elsewhere.
+ *
+ * `npm run build:portfolio` builds for asifuddin.com itself: Pyodide comes
+ * from the /pyodide/ the portfolio already serves, so the public folder (our
+ * own copy of it) is left out rather than shipped twice.
  */
+const forPortfolio = Boolean(process.env.OFFICINA_PORTFOLIO);
+
 export default defineConfig({
   root: 'app',
   base: process.env.OFFICINA_BASE ?? '/officina/ai/',
-  publicDir: 'public',
+  publicDir: forPortfolio ? false : 'public',
   server: { port: 5178, strictPort: true, fs: { allow: ['..'] } },
   preview: { port: 5179, strictPort: true },
   build: { outDir: '../dist', emptyOutDir: true, target: 'es2022' },
