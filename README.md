@@ -29,7 +29,7 @@ Phase 1 (Python, build guide §42) — the deterministic half:
 - [ ] AI provider abstraction; explanation, solver, "ask about this step"
 - [ ] C/C++, Java, assembly simulator (phases 2–4)
 
-Measured (M-series Mac, Chrome): Python ready 1.2 s after page start;
+Measured (Apple M1, Chromium): Python ready 1.2 s after page start;
 50,000 steps traced in 387 ms with the first on screen at 32 ms; any step
 shown in 0.3 ms (p50) / 0.5 ms (p95) against a 50 ms budget.
 
