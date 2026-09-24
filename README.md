@@ -26,7 +26,10 @@ Phase 1 (Python, build guide §42) — the deterministic half:
 - [x] Entry point on the Officina page — a button in the page header, not
       in the notebook toolbar (portfolio branch `claude/officina-ai-setup-1c4d0c`)
 - [ ] Getting the build into the portfolio's CI (see docs/inspection.md)
-- [ ] AI provider abstraction; explanation, solver, "ask about this step"
+- [x] AI provider abstraction; explanation, solver, "ask about this step" —
+      a model in the reader's own browser (WebLLM, Qwen2.5 Coder 3B by
+      default), behind an explicit download: the page fetches 86 kB and none
+      of the model until someone asks for it
 - [ ] C/C++, Java, assembly simulator (phases 2–4)
 
 Measured (Apple M1, Chromium): Python ready 1.2 s after page start;
@@ -63,8 +66,15 @@ src/
     schema.ts      the language-independent step format
     store.ts       holds a trace; any step's state in O(256)
     cache.ts       content-addressed trace cache
+  ai/
+    provider.ts    what the tutor asks of a model; nothing about which model
+    context.ts     a step's recorded facts, written out for a model to reword
+    prompts.ts     the three tasks — explain, ask, solve
+    webllm.ts      the model, in the reader's browser, behind their own click
+    webllm-worker.ts  its worker — never the tracer's
   ui/
     trace-view.ts  the viewer; every navigation is a store read
+    tutor-panel.ts the tutor, kept visibly apart from the trace
     format.ts      values spelled as Python prints them
     highlight.ts   minimal Python highlighting
 app/               the /officina/ai/ page

@@ -38,3 +38,37 @@ from a Blob inherit the page's policy, so this closes it for the worker too:
 `connect-src 'self'` still allows same-origin requests; Pyodide needs them to
 load. Narrow it to the Pyodide path (`connect-src https://asifuddin.com/pyodide/`)
 once the tutor is served from the portfolio.
+
+## What the language model costs this policy
+
+The tutor's model runs in the browser, which means the browser has to fetch
+it, which means `connect-src 'self'` cannot stand as written. WebLLM takes
+the weights from `huggingface.co` (redirected to Hugging Face's CDN) and the
+compiled model libraries from `raw.githubusercontent.com`:
+
+```
+connect-src 'self' https://huggingface.co https://*.hf.co https://cdn-lfs.huggingface.co https://raw.githubusercontent.com
+```
+
+That is a real widening and it is worth being exact about what it buys an
+attacker, because it is less than it looks:
+
+- It does **not** open a channel to a server of their choosing. The gap
+  above — `js.eval(...)` in a traced program smuggling data into a URL — can
+  now reach Hugging Face and GitHub's raw host, and nowhere else. Neither
+  hands its access logs to whoever asked, so there is no one on the other
+  end to receive what was smuggled.
+- It does **not** widen `script-src`, which is what actually governs
+  `import()`, so the shape of that gap is unchanged.
+- It does **not** give the traced program a network. The tracer's worker
+  still has `fetch`, `XMLHttpRequest`, `WebSocket` and the rest deleted
+  before user code runs; CSP is the second line, not the first.
+
+The model runs in its own worker (`src/ai/webllm-worker.ts`), separate from
+the tracer's. That separation is not cosmetic: the tracer's worker has had
+its network removed on purpose, and nothing from the AI directory may ever
+be imported into it.
+
+Self-hosting the weights would restore `connect-src 'self'` exactly. It is
+not done because it means serving a couple of gigabytes per model from the
+site, which is a worse trade than the one above.

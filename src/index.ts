@@ -13,3 +13,8 @@ export type * from './tracing/schema.ts';
 export { mountTraceView } from './ui/trace-view.ts';
 export type { TraceView, TraceViewOptions } from './ui/trace-view.ts';
 export { formatValue } from './ui/format.ts';
+export { mountTutor } from './ui/tutor-panel.ts';
+export type { TutorPanel, TutorPanelOptions } from './ui/tutor-panel.ts';
+export { WebLLMProvider, MODELS, DEFAULT_MODEL } from './ai/webllm.ts';
+export type { WebLLMModel } from './ai/webllm.ts';
+export type { TutorProvider, TutorRequest, TutorTask, Explanation } from './ai/provider.ts';

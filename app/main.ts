@@ -8,7 +8,10 @@ import '../src/ui/trace-view.css';
 
 import { PythonRuntime } from '../src/execution/python/runtime.ts';
 import { mountTraceView, type TraceView } from '../src/ui/trace-view.ts';
+import { mountTutor, type TutorPanel } from '../src/ui/tutor-panel.ts';
+import { WebLLMProvider, DEFAULT_MODEL } from '../src/ai/webllm.ts';
 import type { TraceResult } from '../src/tracing/schema.ts';
+import type { TraceStore } from '../src/tracing/store.ts';
 import { EXAMPLES } from './examples.ts';
 
 /**
@@ -50,6 +53,8 @@ let view: TraceView | null = null;
 let tracedSource: string | null = null;
 let tracedInput: string | null = null;
 let busy = false;
+let store: TraceStore | null = null;
+let lastResult: TraceResult | undefined;
 
 function status(text: string, kind: 'idle' | 'busy' | 'error' = 'idle') {
   statusEl.textContent = text;
@@ -164,10 +169,17 @@ async function trace() {
   tracedInput = input;
   markStale();
   noTrace.hidden = true;
-  view = mountTraceView(viewEl, { source, store: run.store });
+  store = run.store;
+  view = mountTraceView(viewEl, {
+    source,
+    store: run.store,
+    // An answer is about the step it was asked about; moving on dates it.
+    onStep: () => tutor?.refresh(),
+  });
   select('trace');
 
   const result = await run.result;
+  lastResult = result;
   busy = false;
   traceBtn.disabled = false;
   if (run.store.length === 0) {
@@ -224,6 +236,38 @@ runtime.onStateChange((s) => {
   if (s === 'loading') status('Preparing Python in the background — you can start writing.', 'busy');
   else if (s === 'ready') status('Python is ready.');
   else if (s === 'failed') status('Python did not load. Check the connection and reload the page.', 'error');
+});
+
+// ── The tutor ──
+//
+// Constructed eagerly and loaded never: making the provider costs nothing,
+// since both the library and the weights are behind the reader's own click.
+// The panel below the trace is the only thing on the page that mentions it.
+const provider = new WebLLMProvider({
+  totalSteps: () => store?.length ?? 0,
+  read: (i) => {
+    if (!store) throw new Error('no trace');
+    return store.at(i);
+  },
+});
+
+const tutor: TutorPanel | null = mountTutor($<HTMLElement>('tutor'), {
+  provider,
+  providerName: provider.name,
+  downloadGB: DEFAULT_MODEL.gb,
+  step: () => (store && view ? store.at(view.index) : null),
+  source: () => tracedSource ?? codeEl.value,
+  result: () => lastResult,
+  showStep: (index) => {
+    view?.show(index);
+    select('trace');
+  },
+  useProgram: (code) => {
+    codeEl.value = code;
+    codeEl.dispatchEvent(new Event('input'));
+    select('code');
+    status('The tutor wrote that. Trace it to see what it actually does.');
+  },
 });
 
 // ── Start ──
